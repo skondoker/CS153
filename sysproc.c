@@ -13,17 +13,51 @@ sys_fork(void)
   return fork();
 }
 
+// Changed this function
 int
 sys_exit(void)
 {
-  exit();
+  int status;
+  // &Status is addess of the the 0th system call argument
+  if (argint(0, &status) < 0) {
+    return -1;
+  }
+  exit(status); 
   return 0;  // not reached
 }
 
 int
 sys_wait(void)
 {
-  return wait();
+  int *p;
+  // p is a pointer for the 0th call system argument (current process)
+  if (argptr(0, (char**)&p, sizeof(p)) < 0) {
+    return -1;
+  }
+  return wait(p);
+ 
+ // return wait();
+}
+
+int sys_waitpid(void) {
+  int pid;
+  int *status;
+  int options;
+
+  if (argint(0, &pid) < 0) {
+    return -1;
+  }
+
+  if (argptr(1, (char**) &status, sizeof(int*)) < 0) {
+    return -1;
+  }
+  
+  if (argint(2, &options)) {
+    return -1;
+  }
+  
+  return waitpid(pid, status, options);
+
 }
 
 int

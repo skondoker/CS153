@@ -25,24 +25,28 @@ forktest(void)
     if(pid < 0)
       break;
     if(pid == 0)
-      exit();
+      // exit();
+      exit(1);
   }
 
   if(n == N){
     printf(1, "fork claimed to work N times!\n", N);
-    exit();
+    // exit();
+    exit(1);
   }
 
   for(; n > 0; n--){
-    if(wait() < 0){
+    if(wait(0) < 0){
       printf(1, "wait stopped early\n");
-      exit();
+      // exit();
+      exit(1);
     }
   }
 
-  if(wait() != -1){
+  if(wait(0) != -1){
     printf(1, "wait got too many\n");
-    exit();
+    // exit();
+    exit(1);
   }
 
   printf(1, "fork test OK\n");
@@ -52,5 +56,6 @@ int
 main(void)
 {
   forktest();
-  exit();
+  // exit();
+  exit(0);
 }
